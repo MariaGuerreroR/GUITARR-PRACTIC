@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useNavigation } from 'expo-router';
 import { strummingPatterns } from '@/data/strummingPatterns';
 import { GuitarStrings } from '@/components/GuitarStrings';
 import { PatternSelector } from '@/components/PatternSelector';
@@ -17,6 +18,7 @@ import { ScoreDisplay } from '@/components/ScoreDisplay';
 const { width, height } = Dimensions.get('window');
 
 export default function PracticeScreen() {
+  const navigation = useNavigation();
   const [selectedPattern, setSelectedPattern] = useState(strummingPatterns[0]);
   const [currentStep, setCurrentStep] = useState(0);
   const [userPattern, setUserPattern] = useState<string[]>([]);
@@ -25,6 +27,23 @@ export default function PracticeScreen() {
   const [feedback, setFeedback] = useState('');
   const [showSuccess, setShowSuccess] = useState(false);
   const [isPracticeMode, setIsPracticeMode] = useState(false);
+  const [attempts, setAttempts] = useState(0);
+
+  useEffect(() => {
+    if (isPracticeMode) {
+      navigation.setOptions({ tabBarStyle: { display: 'none' } });
+    } else {
+      navigation.setOptions({
+        tabBarStyle: {
+          backgroundColor: '#F5F4F0',
+          borderTopColor: '#E7E5E4',
+          height: 80,
+          paddingBottom: 20,
+          paddingTop: 10,
+        },
+      });
+    }
+  }, [isPracticeMode, navigation]);
 
   const fadeAnim = new Animated.Value(1);
 
@@ -33,12 +52,20 @@ export default function PracticeScreen() {
     setIsPracticeMode(true);
     setUserPattern([]);
     setCurrentStep(0);
+    setAttempts(0);
     setFeedback('¡Sigue el patrón!');
+  };
+
+  const exitPracticeMode = () => {
+    setIsRecording(false);
+    setIsPracticeMode(false);
+    setUserPattern([]);
+    setFeedback('');
+    setAttempts(0);
   };
 
   const stopRecording = () => {
     setIsRecording(false);
-    setIsPracticeMode(false);
     checkPattern();
   };
 
@@ -57,25 +84,31 @@ export default function PracticeScreen() {
   const checkPattern = () => {
     if (userPattern.length === 0) return;
 
+    setAttempts(prev => prev + 1);
+
     const isCorrect = userPattern.every(
       (move, index) => move === selectedPattern.pattern[index]
     );
 
     if (isCorrect && userPattern.length === selectedPattern.pattern.length) {
       setScore(score + selectedPattern.difficulty * 10);
-      setFeedback('¡Perfecto! 🎸');
+      const attemptText = attempts + 1 === 1 ? '1 intento' : `${attempts + 1} intentos`;
+      setFeedback(`¡Perfecto! 🎸\nLo lograste en ${attemptText}`);
       setShowSuccess(true);
 
       setTimeout(() => {
         setShowSuccess(false);
         setFeedback('');
         setUserPattern([]);
-      }, 2000);
+        setIsRecording(true);
+        setAttempts(0);
+      }, 3000);
     } else {
-      setFeedback('Inténtalo de nuevo 💪');
+      setFeedback(`Intento ${attempts + 1} - Inténtalo de nuevo 💪`);
       setTimeout(() => {
         setFeedback('');
         setUserPattern([]);
+        setIsRecording(true);
       }, 1500);
     }
   };
@@ -86,6 +119,7 @@ export default function PracticeScreen() {
     setIsRecording(false);
     setIsPracticeMode(false);
     setFeedback('');
+    setAttempts(0);
   };
 
   // Simplified horizontal practice view
@@ -119,9 +153,9 @@ export default function PracticeScreen() {
             </View>
             <TouchableOpacity
               style={styles.exitButton}
-              onPress={stopRecording}
+              onPress={exitPracticeMode}
             >
-              <Text style={styles.exitButtonText}>✕</Text>
+              <Text style={styles.exitButtonText}>✕ Salir</Text>
             </TouchableOpacity>
           </View>
 
@@ -411,16 +445,16 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(255, 255, 255, 0.3)',
   },
   exitButton: {
-    backgroundColor: 'rgba(239, 68, 68, 0.8)',
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    backgroundColor: 'rgba(239, 68, 68, 0.9)',
+    paddingHorizontal: 20,
+    paddingVertical: 12,
+    borderRadius: 25,
     alignItems: 'center',
     justifyContent: 'center',
   },
   exitButtonText: {
     color: 'white',
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: 'bold',
   },
   practiceGuitarArea: {
