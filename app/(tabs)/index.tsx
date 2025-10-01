@@ -55,6 +55,8 @@ export default function PracticeScreen() {
   };
 
   const checkPattern = () => {
+    if (userPattern.length === 0) return;
+
     const isCorrect = userPattern.every(
       (move, index) => move === selectedPattern.pattern[index]
     );
@@ -63,17 +65,19 @@ export default function PracticeScreen() {
       setScore(score + selectedPattern.difficulty * 10);
       setFeedback('¡Perfecto! 🎸');
       setShowSuccess(true);
-      
+
       setTimeout(() => {
         setShowSuccess(false);
         setFeedback('');
+        setUserPattern([]);
       }, 2000);
     } else {
       setFeedback('Inténtalo de nuevo 💪');
-      setTimeout(() => setFeedback(''), 1500);
+      setTimeout(() => {
+        setFeedback('');
+        setUserPattern([]);
+      }, 1500);
     }
-    
-    setUserPattern([]);
   };
 
   const resetPractice = () => {
@@ -92,8 +96,6 @@ export default function PracticeScreen() {
           colors={['#8B5A3C', '#A0522D']}
           style={styles.practiceGradient}
         >
-        <View style={styles.header}>
-          {/* Solo el patrón en la parte superior */}
           <View style={styles.practicePatternHeader}>
             <Text style={styles.practicePatternName}>{selectedPattern.name}</Text>
             <View style={styles.practicePatternVisualization}>
@@ -102,15 +104,15 @@ export default function PracticeScreen() {
                   <Text style={styles.practicePatternArrow}>
                     {direction === 'down' ? '↓' : '↑'}
                   </Text>
-                  <View 
+                  <View
                     style={[
                       styles.practiceStepIndicator,
                       userPattern[index] && {
-                        backgroundColor: userPattern[index] === direction 
-                          ? '#10B981' 
+                        backgroundColor: userPattern[index] === direction
+                          ? '#10B981'
                           : '#EF4444'
                       }
-                    ]} 
+                    ]}
                   />
                 </View>
               ))}
@@ -122,17 +124,20 @@ export default function PracticeScreen() {
               <Text style={styles.exitButtonText}>✕</Text>
             </TouchableOpacity>
           </View>
-          <GuitarStrings
-            onStrum={handleStringStrum}
-            isRecording={isRecording}
-            isHorizontal={true}
-          />
+
+          <View style={styles.practiceGuitarArea}>
+            <GuitarStrings
+              onStrum={handleStringStrum}
+              isRecording={isRecording}
+              isHorizontal={true}
+            />
+          </View>
+
           {feedback && (
             <View style={styles.minimalFeedback}>
               <Text style={styles.minimalFeedbackText}>{feedback}</Text>
             </View>
           )}
-        </View>
         </LinearGradient>
       </SafeAreaView>
     );
@@ -417,6 +422,11 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 18,
     fontWeight: 'bold',
+  },
+  practiceGuitarArea: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   minimalFeedback: {
     position: 'absolute',

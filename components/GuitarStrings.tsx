@@ -366,10 +366,10 @@ const styles = StyleSheet.create({
   horizontalStringsContainer: {
     flex: 1,
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    justifyContent: 'space-evenly',
     alignItems: 'center',
-    paddingHorizontal: 40,
-    paddingVertical: 40,
+    paddingHorizontal: 60,
+    paddingVertical: 20,
   },
   gestureArea: {
     flex: 1,
@@ -384,8 +384,10 @@ const styles = StyleSheet.create({
   horizontalStringTouchArea: {
     flex: 1,
     alignItems: 'center',
-    paddingVertical: 10,
-    minWidth: 40,
+    justifyContent: 'center',
+    paddingHorizontal: 15,
+    minWidth: 50,
+    height: '100%',
   },
   stringContainer: {
     height: 25,
@@ -394,11 +396,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   horizontalStringContainer: {
-    width: 30,
+    width: 40,
     justifyContent: 'center',
     flexDirection: 'column',
     alignItems: 'center',
-    height: '100%',
+    flex: 1,
   },
   string: {
     flex: 1,
@@ -407,8 +409,9 @@ const styles = StyleSheet.create({
   },
   horizontalString: {
     flex: 1,
-    borderRadius: 3,
-    marginBottom: 10,
+    borderRadius: 4,
+    marginBottom: 8,
+    minHeight: 200,
   },
   noteLabel: {
     color: '#FEF3C7',
@@ -419,9 +422,10 @@ const styles = StyleSheet.create({
   },
   horizontalNoteLabel: {
     color: '#FEF3C7',
-    fontSize: 14,
+    fontSize: 16,
     fontWeight: 'bold',
     textAlign: 'center',
+    marginTop: 5,
   },
   fret: {
     position: 'absolute',
