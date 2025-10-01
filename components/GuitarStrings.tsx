@@ -27,12 +27,12 @@ export function GuitarStrings({ onStrum, isRecording, isHorizontal }: GuitarStri
   const [sounds, setSounds] = useState<{ [key: string]: Audio.Sound }>({});
 
   const strings = [
-    { note: 'E', thickness: 1, color: '#E5E7EB', frequency: 82.41 }, // 6ta cuerda
-    { note: 'A', thickness: 2, color: '#D1D5DB', frequency: 110.00 }, // 5ta cuerda
-    { note: 'D', thickness: 3, color: '#B5B7BC', frequency: 146.83 }, // 4ta cuerda
-    { note: 'G', thickness: 4, color: '#9CA3AF', frequency: 196.00 }, // 3ra cuerda
-    { note: 'B', thickness: 5, color: '#6B7280', frequency: 246.94 }, // 2da cuerda
-    { note: 'E', thickness: 6, color: '#4B5563', frequency: 329.63 }, // 1ra cuerda
+    { note: 'E', thickness: 3, horizontalWidth: 8, color: '#E5E7EB', frequency: 82.41 }, // 6ta cuerda
+    { note: 'A', thickness: 3.5, horizontalWidth: 9, color: '#D1D5DB', frequency: 110.00 }, // 5ta cuerda
+    { note: 'D', thickness: 4, horizontalWidth: 10, color: '#B5B7BC', frequency: 146.83 }, // 4ta cuerda
+    { note: 'G', thickness: 4.5, horizontalWidth: 11, color: '#9CA3AF', frequency: 196.00 }, // 3ra cuerda
+    { note: 'B', thickness: 5, horizontalWidth: 12, color: '#6B7280', frequency: 246.94 }, // 2da cuerda
+    { note: 'E', thickness: 5.5, horizontalWidth: 13, color: '#4B5563', frequency: 329.63 }, // 1ra cuerda
   ];
 
   // Cargar sonidos al montar el componente
@@ -209,7 +209,7 @@ export function GuitarStrings({ onStrum, isRecording, isHorizontal }: GuitarStri
                       style={[
                         styles.horizontalString,
                         {
-                          width: string.thickness * 2,
+                          width: string.horizontalWidth,
                           backgroundColor: string.color,
                           shadowColor: '#000',
                           shadowOffset: { width: 0, height: 1 },
@@ -385,6 +385,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     paddingVertical: 10,
+    minWidth: 40,
   },
   stringContainer: {
     height: 25,
@@ -393,7 +394,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   horizontalStringContainer: {
-    width: 25,
+    width: 30,
     justifyContent: 'center',
     flexDirection: 'column',
     alignItems: 'center',
